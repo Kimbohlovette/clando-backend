@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS travel_histories;
+DROP TABLE IF EXISTS places;
+DROP TABLE IF EXISTS drivers;
+DROP TABLE IF EXISTS users;

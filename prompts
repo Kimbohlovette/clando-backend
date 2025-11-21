@@ -1,0 +1,14 @@
+create a gin server in server/server.go
+- It should implement endpoints to create, get, getall users
+- It should implement the endpoints to initiate payment, update payement, update payment status, and get all payments
+- It should implement the endpoints to create place, get place, and get all places,
+
+Driver
+- It should implement the endpoints to create, get, get all drivers
+
+
+Calculate transportation fair
+- It should implement th endpoint to calculate the transportation fair
+
+
+Use the server interface to create a new server in /cmd/main.go and run the server
