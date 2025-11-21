@@ -2,10 +2,9 @@ package server
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 
 	"github.com/kimbohlovette/clando-backend/db/sqlc"
 	"github.com/kimbohlovette/clando-backend/models"
@@ -19,11 +18,9 @@ func (s *server) createUser(c *gin.Context) {
 	}
 
 	user, err := s.store.Do().CreateUser(c, sqlc.CreateUserParams{
-		ID:        "",
-		Email:     req.Email,
-		Phone:     req.Phone,
-		CreatedAt: pgtype.Timestamp{Time: time.Now(), Valid: true},
-		UpdatedAt: pgtype.Timestamp{Time: time.Now(), Valid: true},
+		ID:       uuid.New().String(),
+		Username: req.Username,
+		Phone:    req.Phone,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

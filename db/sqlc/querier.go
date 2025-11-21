@@ -25,7 +25,7 @@ type Querier interface {
 	GetPlace(ctx context.Context, id string) (Place, error)
 	GetTravelHistory(ctx context.Context, id string) (TravelHistory, error)
 	GetUser(ctx context.Context, id string) (User, error)
-	GetUserByEmail(ctx context.Context, email string) (User, error)
+	GetUserByPhone(ctx context.Context, phone string) (User, error)
 	ListAvailableDrivers(ctx context.Context) ([]Driver, error)
 	ListDriverTravelHistory(ctx context.Context, driverID string) ([]TravelHistory, error)
 	ListPlaces(ctx context.Context) ([]Place, error)

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/kimbohlovette/clando-backend/db/sqlc"
 	"github.com/kimbohlovette/clando-backend/models"
@@ -21,7 +22,7 @@ func (s *server) initiatePayment(c *gin.Context) {
 	amount.Scan(req.Amount)
 	
 	payment, err := s.store.Do().CreatePayment(c, sqlc.CreatePaymentParams{
-		ID:            req.ID,
+		ID:            uuid.New().String(),
 		UserID:        req.UserID,
 		TravelID:      req.TravelID,
 		Amount:        amount,

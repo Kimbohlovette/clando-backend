@@ -7,43 +7,24 @@ package sqlc
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (id, name, email, phone, created_at, updated_at)
-VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id, name, email, phone, created_at, updated_at
+INSERT INTO users (id, username, phone)
+VALUES ($1, $2, $3)
+RETURNING id, username, phone
 `
 
 type CreateUserParams struct {
-	ID        string           `json:"id"`
-	Name      string           `json:"name"`
-	Email     string           `json:"email"`
-	Phone     string           `json:"phone"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Phone    string `json:"phone"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser,
-		arg.ID,
-		arg.Name,
-		arg.Email,
-		arg.Phone,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-	)
+	row := q.db.QueryRow(ctx, createUser, arg.ID, arg.Username, arg.Phone)
 	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Email,
-		&i.Phone,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
+	err := row.Scan(&i.ID, &i.Username, &i.Phone)
 	return i, err
 }
 
@@ -57,43 +38,29 @@ func (q *Queries) DeleteUser(ctx context.Context, id string) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, name, email, phone, created_at, updated_at FROM users WHERE id = $1
+SELECT id, username, phone FROM users WHERE id = $1
 `
 
 func (q *Queries) GetUser(ctx context.Context, id string) (User, error) {
 	row := q.db.QueryRow(ctx, getUser, id)
 	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Email,
-		&i.Phone,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
+	err := row.Scan(&i.ID, &i.Username, &i.Phone)
 	return i, err
 }
 
-const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, name, email, phone, created_at, updated_at FROM users WHERE email = $1
+const getUserByPhone = `-- name: GetUserByPhone :one
+SELECT id, username, phone FROM users WHERE phone = $1
 `
 
-func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
-	row := q.db.QueryRow(ctx, getUserByEmail, email)
+func (q *Queries) GetUserByPhone(ctx context.Context, phone string) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByPhone, phone)
 	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Email,
-		&i.Phone,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
+	err := row.Scan(&i.ID, &i.Username, &i.Phone)
 	return i, err
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, name, email, phone, created_at, updated_at FROM users ORDER BY created_at DESC
+SELECT id, username, phone FROM users
 `
 
 func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
@@ -105,14 +72,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	items := []User{}
 	for rows.Next() {
 		var i User
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.Email,
-			&i.Phone,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
+		if err := rows.Scan(&i.ID, &i.Username, &i.Phone); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -124,33 +84,20 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 }
 
 const updateUser = `-- name: UpdateUser :one
-UPDATE users SET name = $2, phone = $3, updated_at = $4
+UPDATE users SET username = $2, phone = $3
 WHERE id = $1
-RETURNING id, name, email, phone, created_at, updated_at
+RETURNING id, username, phone
 `
 
 type UpdateUserParams struct {
-	ID        string           `json:"id"`
-	Name      string           `json:"name"`
-	Phone     string           `json:"phone"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Phone    string `json:"phone"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, updateUser,
-		arg.ID,
-		arg.Name,
-		arg.Phone,
-		arg.UpdatedAt,
-	)
+	row := q.db.QueryRow(ctx, updateUser, arg.ID, arg.Username, arg.Phone)
 	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Email,
-		&i.Phone,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
+	err := row.Scan(&i.ID, &i.Username, &i.Phone)
 	return i, err
 }

@@ -55,10 +55,7 @@ type TravelHistory struct {
 }
 
 type User struct {
-	ID        string           `json:"id"`
-	Name      string           `json:"name"`
-	Email     string           `json:"email"`
-	Phone     string           `json:"phone"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Phone    string `json:"phone"`
 }

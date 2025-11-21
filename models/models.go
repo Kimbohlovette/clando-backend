@@ -15,12 +15,9 @@ type Config struct {
 }
 
 type User struct {
-	ID        string    `json:"id" gorm:"primaryKey"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email" gorm:"unique"`
-	Phone     string    `json:"phone"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID       string `json:"id" gorm:"primaryKey"`
+	Username string `json:"username"`
+	Phone    string `json:"phone"`
 }
 
 type Payment struct {

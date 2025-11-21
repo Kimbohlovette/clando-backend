@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/kimbohlovette/clando-backend/db/sqlc"
 	"github.com/kimbohlovette/clando-backend/models"
@@ -22,7 +23,7 @@ func (s *server) createPlace(c *gin.Context) {
 	lon.Scan(req.Longitude)
 	
 	place, err := s.store.Do().CreatePlace(c, sqlc.CreatePlaceParams{
-		ID:        req.ID,
+		ID:        uuid.New().String(),
 		Name:      req.Name,
 		Address:   req.Address,
 		Latitude:  lat,

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/kimbohlovette/clando-backend/db/sqlc"
 	"github.com/kimbohlovette/clando-backend/models"
@@ -21,7 +22,7 @@ func (s *server) createDriver(c *gin.Context) {
 	rating.Scan(req.Rating)
 	
 	driver, err := s.store.Do().CreateDriver(c, sqlc.CreateDriverParams{
-		ID:          req.ID,
+		ID:          uuid.New().String(),
 		Name:        req.Name,
 		Phone:       req.Phone,
 		LicenseNo:   req.LicenseNo,
