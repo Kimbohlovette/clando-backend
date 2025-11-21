@@ -3,11 +3,113 @@
 Base URL: `http://localhost:8080/api`
 
 ## Table of Contents
+- [Setup](#setup)
 - [Users](#users)
 - [Drivers](#drivers)
 - [Places](#places)
 - [Payments](#payments)
 - [Fare Calculation](#fare-calculation)
+
+---
+
+## Setup
+
+### Prerequisites
+- Go 1.23.0 or higher
+- Docker and Docker Compose
+- sqlc (for generating Go code from SQL)
+- golang-migrate (for database migrations)
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/kimbohlovette/clando-backend.git
+```
+
+2. **Install dependencies**
+```bash
+go mod download
+```
+
+3. **Install required tools**
+```bash
+# Install sqlc
+go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+
+# Install golang-migrate
+go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+```
+
+4. **Start PostgreSQL with Docker**
+```bash
+docker run -d \
+  --name clando-postgres \
+  -e POSTGRES_USER=clando \
+  -e POSTGRES_PASSWORD=secret \
+  -e POSTGRES_DB=clando \
+  -p 5432:5432 \
+  postgres:15-alpine
+```
+
+5. **Configure environment variables**
+```bash
+cp .env.example .env
+# Edit .env with your database credentials
+```
+
+Example `.env` file:
+```
+PORT=8080
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=clando
+DB_PASSWORD=secret
+DB_NAME=clando
+DB_SSL_MODE=false
+```
+
+6. **Run the application**
+```bash
+go run cmd/main.go
+```
+
+The server will start on `http://localhost:8080`
+
+### Database Schema
+
+The application uses the following tables:
+- `users`: User accounts
+- `drivers`: Driver profiles and vehicle information
+- `places`: Locations and addresses
+- `payments`: Payment transactions
+- `travel_histories`: Trip records
+
+### Development
+
+**Run with hot reload (optional)**
+```bash
+# Install air for hot reload
+go install github.com/air-verse/air@latest
+
+# Run with air
+air
+```
+
+**Run migrations**
+```bash
+# Up
+migrate -path db/migrations -database "postgresql://clando:secret@localhost:5432/clando?sslmode=disable" up
+
+# Down
+migrate -path db/migrations -database "postgresql://clando:secret@localhost:5432/clando?sslmode=disable" down
+```
+
+**Regenerate sqlc code**
+```bash
+sqlc generate
+```
 
 ---
 
